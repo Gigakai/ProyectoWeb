@@ -1,0 +1,13 @@
+# Ignorar node_modules
+backend-restaurante/node_modules/
+frontend-restaurante/node_modules/
+
+# Ignorar dependencias 
+**/node_modules/
+
+# Ignorar archivos de entorno 
+**/.env
+**/.DS_Store
+**/dist/
+**/build/
+**/coverage/
