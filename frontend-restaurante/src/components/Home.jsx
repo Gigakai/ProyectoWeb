@@ -16,6 +16,7 @@ const Home=() =>{
              platillos irresistibles que llevarán tu paladar al siguiente nivel.
               ¡Atrévete a probarlo y vive la experiencia GigaFood! 🍔🍗🍕"
             </p>
+            
             <div className="lg:pl-44">
                 <Button title="Ordenar Ahora"/>
             </div>
