@@ -1,10 +1,19 @@
-
+import Billboard from "../Components/Billboard.jsx";
+import Dashboard from "../Components/Dashboard.jsx";
 
 function Landing() {
     return (
-        <div>
-            <h1>Hola</h1>
-        </div>
+
+        <main>
+            <div id="Billboard">
+                <Billboard/>
+            </div>
+
+            <div>
+                <Dashboard/>
+            </div>
+
+        </main>
     )
 }
 
