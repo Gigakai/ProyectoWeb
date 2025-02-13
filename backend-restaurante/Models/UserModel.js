@@ -1,8 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import dbConnection from "../database.js";
 
-class UserModel extends Model {
-}
+class UserModel extends Model {}
 
 UserModel.init({
     id:{
