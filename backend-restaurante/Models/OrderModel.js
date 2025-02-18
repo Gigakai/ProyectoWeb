@@ -21,6 +21,10 @@ OrderModel.init({
             model: "usuarios",
             key: 'id',
         }
+    },
+    direccion:{
+        type: DataTypes.STRING,
+        allowNull: false
     }
 },{
     sequelize: dbConnection,

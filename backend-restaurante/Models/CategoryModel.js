@@ -1,5 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import dbConnection from "../database.js";
+import ItemCategoryModel from "./ItemCategoryModel.js";
+import ItemModel from "./ItemModel.js";
 
 class CategoryModel extends Model {
 }

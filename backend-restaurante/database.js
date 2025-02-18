@@ -6,7 +6,6 @@ const dbConnection = new Sequelize("dbGigaFood", "root", "admin", {
     port: 3306,
 });
 
-
 (async () => {
     try {
         await dbConnection.authenticate();
