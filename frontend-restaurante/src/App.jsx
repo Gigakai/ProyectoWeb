@@ -1,4 +1,5 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import Dishes from "./components/Dishes";
@@ -7,36 +8,22 @@ import Menu from "./components/Menu";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 
-const App=() =>{
-  return(
+const App = () => {
+  return (
     <div>
-      <Navbar/>
-
+      <Navbar />
       <main>
-        <div id="home">
-          <Home/>
-        </div>
-
-        <div id="dishes">
-           <Dishes/>
-        </div>
-
-        <div id="about">
-            <About/>
-        </div>
-
-        <div id="menu">
-            <Menu/>
-        </div>
-
-        <div>
-          <Login/>
-        </div>
-
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dishes" element={<Dishes />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
       </main>
-      <Footer/>
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
