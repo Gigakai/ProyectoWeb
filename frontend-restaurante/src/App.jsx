@@ -7,6 +7,8 @@ import About from "./components/About";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
+import Reviews from "./components/Reviews";
+
 
 const App = () => {
   return (
@@ -19,6 +21,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/reviews" element={<Reviews />} />
         </Routes>
       </main>
       <Footer />

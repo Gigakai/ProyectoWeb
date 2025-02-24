@@ -53,7 +53,7 @@ const Navbar = () => {
             <Link to="/menu" className="hover:text-brightColor transition-all cursor-pointer">
               Menu
             </Link>
-            <Link to="/review" className="hover:text-brightColor transition-all cursor-pointer">
+            <Link to="/reviews" className="hover:text-brightColor transition-all cursor-pointer">
               Reviews
             </Link>
 
