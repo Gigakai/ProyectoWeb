@@ -1,49 +1,35 @@
-import {useContext, useState} from 'react'
-import './App.css'
-import { Routes, Route, Navigate } from 'react-router-dom';
-import {AuthContext} from "./Context/AuthContext.jsx";
-import Landing from "./pages/Landing.jsx";
-import Navbar from "./Components/Navbar.jsx";
-import Footer from "./Components/Footer.jsx";
-import LogIn from "./pages/LogIn.jsx";
-import Register from "./pages/Register.jsx";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
+import Dishes from "./components/Dishes";
+import About from "./components/About";
+import Menu from "./components/Menu";
+import Footer from "./components/Footer";
+import Login from "./components/Login";
+import Reviews from "./components/Reviews";
+import DishDetail from "./components/DishDetail";
 
-function App() {
-  const {activeUser} = useContext(AuthContext)
 
+
+const App = () => {
   return (
-    <>
-        <Navbar/>
+    <div>
+      <Navbar />
+      <main>
         <Routes>
-            {/* Rutas publicas*/}
-            {!activeUser ? (
-                <>
-                    <Route path="/" element={ <Landing /> } />
-                    <Route path="/LogIn" element={ <LogIn /> } />
-                    <Route path="/Registrar" element={ <Register /> } />
-
-                    {/* Rutas default para cuando se ingresa una equivocada*/}
-                    <Route path="*" element={<Navigate to="/" />} />
-                </>
-            ):(
-                <Route path="/" element={<Landing />} />
-            )}
-
-            {/* Rutas Restringidas para autenticacion*/}
-
-            {activeUser  && (
-                <>
-                    <Route path="/" element={ <Landing /> } />
-                    {/* Rutas default para cuando se ingresa una equivocada*/}
-                    <Route path="*" element={<Navigate to="/" />} />
-                </>
-            )}
-
-
+          <Route path="/" element={<Home />} />
+          <Route path="/dishes" element={<Dishes />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/dish/:id" element={<DishDetail />} />
         </Routes>
-        <Footer/>
-    </>
-  )
-}
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
-export default App
+export default App;
