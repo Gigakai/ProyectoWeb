@@ -8,6 +8,8 @@ import Menu from "./components/Menu";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Reviews from "./components/Reviews";
+import DishDetail from "./components/DishDetail";
+
 
 
 const App = () => {
@@ -22,6 +24,7 @@ const App = () => {
           <Route path="/menu" element={<Menu />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reviews" element={<Reviews />} />
+          <Route path="/dish/:id" element={<DishDetail />} />
         </Routes>
       </main>
       <Footer />
