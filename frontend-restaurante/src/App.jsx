@@ -7,9 +7,9 @@ import About from "./components/About";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
-import Reviews from "./components/Reviews";
 import DishDetail from "./components/DishDetail";
-
+import Profile from "./components/Profile";
+import AdvSearch from "./components/AdvSearch";
 
 
 const App = () => {
@@ -23,8 +23,9 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/dish/:id" element={<DishDetail />} />
+          <Route path="/advsearch" element={<AdvSearch />} />
         </Routes>
       </main>
       <Footer />

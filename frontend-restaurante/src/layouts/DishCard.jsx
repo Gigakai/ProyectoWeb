@@ -13,7 +13,7 @@ const DishCard = (props) => {
     };
 
     const handleAddToCart = (e) => {
-        e.stopPropagation(); // Evita que se active el click de la tarjeta
+        e.stopPropagation(); 
         console.log("Producto agregado al carrito!");
     };
 
