@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { BsStarFill, BsStarHalf } from "react-icons/bs";
-import Button from "./Button";
+import Button from "../layouts/Button.jsx";
 import './DishCard.css'
 import { AiFillLike } from "react-icons/ai";
 
@@ -37,7 +37,7 @@ const DishCard = (props) => {
                     <button 
                         type="button" 
                         onClick={handleAddToCart}
-                        className="cursor-pointer w-full border-2 py-2 rounded-3xl hover:bg-brightColor hover:text-[#f25e53] transition-all"
+                        className="cursor-pointer w-full border-2 py-2 rounded-3xl hover:border-[#f25e53] hover:text-[#f25e53] active:border-black active:text-black transition-all"
                     >
                         Agregar al Carrito
                     </button>

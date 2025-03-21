@@ -15,27 +15,27 @@ const Footer = () => {
         <div className="bg-gray-300 text-white ">
           <h1 className="font-medium text-xl pb-4 pt-5 md:pt-0">Links</h1>
           <nav className="text-black flex flex-col gap-2">
-            <a className="transition-all cursor-pointer text-white" href="/">Dishes</a>
-            <a className=" transition-all cursor-pointer text-white" href="/">About</a>
-            <a className=" transition-all cursor-pointer text-white" href="/">Menu</a>
-            <a className=" transition-all cursor-pointer text-white" href="/">Reviews</a>
+            <a className="transition-all cursor-pointer text-white" href="/frontend-restaurante/public">Dishes</a>
+            <a className=" transition-all cursor-pointer text-white" href="/frontend-restaurante/public">About</a>
+            <a className=" transition-all cursor-pointer text-white" href="/frontend-restaurante/public">Menu</a>
+            <a className=" transition-all cursor-pointer text-white" href="/frontend-restaurante/public">Reviews</a>
           </nav>
         </div>
 
         <div className="bg-gray-300 text-white ">
           <h1 className="font-medium text-xl pb-4 pt-5 md:pt-0">Menu</h1>
           <nav className="text-black flex flex-col gap-2">
-            <a className="transition-all cursor-pointer text-white" href="/">Our Dishes</a>
-            <a className=" transition-all cursor-pointer text-white" href="/">Premium Menu</a>
+            <a className="transition-all cursor-pointer text-white" href="/frontend-restaurante/public">Our Dishes</a>
+            <a className=" transition-all cursor-pointer text-white" href="/frontend-restaurante/public">Premium Menu</a>
           </nav>
         </div>
         
         <div className="bg-gray-300 text-white ">
           <h1 className="font-medium text-xl pb-4 pt-5 md:pt-0">Contáctanos</h1>
           <nav className="text-black flex flex-col gap-2">
-            <a className="transition-all cursor-pointer text-white" href="/">https://github.com/Gigakai/ProyectoWeb/tree/dev-Gustavo</a>
-            <a className=" transition-all cursor-pointer text-white" href="/">+52 768 110 6299</a>
-            <a className=" transition-all cursor-pointer text-white" href="/">Social Media</a>
+            <a className="transition-all cursor-pointer text-white" href="/frontend-restaurante/public">https://github.com/Gigakai/ProyectoWeb/tree/dev-Gustavo</a>
+            <a className=" transition-all cursor-pointer text-white" href="/frontend-restaurante/public">+52 768 110 6299</a>
+            <a className=" transition-all cursor-pointer text-white" href="/frontend-restaurante/public">Social Media</a>
           </nav>
         </div>
       </div>
