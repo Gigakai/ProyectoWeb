@@ -53,11 +53,32 @@ export const getReviewsByProduct = async (req, res) => {
 
         const reviews = await ReviewModel.findAll({where: {idPlatillo: idPlatillo}, include: [{
                 model: UserModel,
-                attributes: ['username', 'avatar']
+                attributes: ['nombre', 'avatar']
             }]})
 
         return res.status(200).json({
             Comentarios: reviews,
+            msg: "Se obtuvieron las comentarios",
+            success: true
+        })
+
+    }catch (error) {
+        res.status(500).json({success: false, msg: error, errores: []})
+    }
+}
+
+
+export const getReviewsByUser = async (req, res) => {
+    try {
+        const { idPlatillo, idUsuario } = req.params;
+
+        const review = await ReviewModel.findOne({where: {idPlatillo: idPlatillo, idUsuario: idUsuario}, include: [{
+                model: UserModel,
+                attributes: ['nombre', 'avatar']
+            }]})
+
+        return res.status(200).json({
+            Comentario: review,
             msg: "Se obtuvieron las comentarios",
             success: true
         })

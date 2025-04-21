@@ -4,11 +4,15 @@ import validator from "validator";
 export const addPayment = async (req, res) => {
     try {
         await PaymentModel.sync()
-        const { nombre, tipo, ultimosDigitos, fechaVencimiento, idUsuario } = req.body;
+        const { nombre, tipo, ultimosDigitos, fechaVencimiento, idUsuario, idPedido } = req.body;
         const errores = {}
 
         if(!idUsuario){
             errores.idUsuario = "Error en el usuario"
+        }
+
+        if(!idPedido){
+            errores.idPedido = "Error en el pedido"
         }
 
         if (!nombre || !validator.isAlpha(nombre, 'es-ES', {ignore: ' '}) || nombre.length < 3) {
@@ -23,12 +27,12 @@ export const addPayment = async (req, res) => {
             errores.ultimosDigitos = "Error en el tipo"
         }
 
-        if (!fechaVencimiento || !validator.isDate(fechaVencimiento)) {
+        if (!fechaVencimiento) {
             errores.fechaNacimiento = "Error en la fecha de Vencimiento"
         }
 
         if(Object.keys(errores).length <= 0){
-            const paymentAdded = await PaymentModel.create({nombre, tipo, ultimosDigitos, fechaVencimiento, idOwner: idUsuario})
+            const paymentAdded = await PaymentModel.create({nombre, tipo, ultimosDigitos, fechaVencimiento, idOwner: idUsuario, idOrder: idPedido})
 
             return res.status(200).json({
                 metodoPago: paymentAdded,
@@ -44,6 +48,7 @@ export const addPayment = async (req, res) => {
         }
 
     } catch (error) {
+
         res.status(500).json({success: false, msg: error, errores: []})
     }
 };
@@ -63,12 +68,12 @@ export const updatePayment = async (req, res) => {
             errores.tipo = "Error en el tipo"
         }
 
-        if (!ultimosDigitos || !validator.isNumeric(ultimosDigitos) || ultimosDigitos.length !== 4) {
-            errores.tipo = "Error en el tipo"
+        if (!fechaVencimiento) {
+            errores.fechaVencimiento = "Error en el tipo"
         }
 
-        if (!fechaVencimiento || !validator.isDate(fechaVencimiento)) {
-            errores.fechaNacimiento = "Error en la fecha de Vencimiento"
+        if (!ultimosDigitos || !validator.isNumeric(ultimosDigitos) || ultimosDigitos.length !== 4) {
+            errores.ultimosDigitos = "Error en los ultimos digitos"
         }
 
         if(Object.keys(errores).length <= 0){

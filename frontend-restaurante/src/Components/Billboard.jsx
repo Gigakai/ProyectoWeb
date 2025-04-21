@@ -18,10 +18,7 @@ function Billboard(){
                     ¡Atrévete a probarlo y vive la experiencia <span className="text-yellow-400">GigaFood</span>! 🍔🍗🍕
                 </p>
                 <div className="flex space-x-5">
-                    <Button title="Ordenar Ahora"/>
-                    <Link to="/menu">
-                        <Button title="Ver Menú"/>
-                    </Link>
+
                 </div>
             </div>
             <div

@@ -3,7 +3,7 @@ import {
     addItem,
     filterItems,
     getItem,
-    getItems,
+    getItems, getItemsMenu, getTopItems,
     updateAvailability,
     updateItem
 } from "../Controllers/ItemController.js";
@@ -17,6 +17,8 @@ router.patch('/update', updateItem)
 router.patch('/updateStatus', updateAvailability)
 router.get('/getOne/:idPlatillo', getItem)
 router.get('/getAll', getItems)
-router.get('/filter', filterItems)
+router.get('/getMenu/:idCategoria', getItemsMenu)
+router.get('/getDashboard', getTopItems)
+router.post('/filter', filterItems)
 
 export default router;

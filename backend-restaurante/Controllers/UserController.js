@@ -4,7 +4,7 @@ import UserModel from "../Models/UserModel.js";
 export const registerUser = async (req, res) => {
     try {
         await UserModel.sync()
-        const {email, password, fechaNacimiento, avatar, telefono, nombre, username, tipo} = req.body;
+        const {email, password, fechaNacimiento, avatar, telefono, nombre, tipo} = req.body;
 
         const errores = {}
 
@@ -34,15 +34,6 @@ export const registerUser = async (req, res) => {
             errores.nombre = "Error en el Nombre"
         }
 
-        if (!username || !validator.isAlpha(username, 'es-ES', {ignore: ' '}) || username.length < 3) {
-            errores.username = "Error en el nombre de usuario"
-        } else {
-            const isDuplicateUser = await UserModel.findOne({where: {username: username}})
-
-            if (isDuplicateUser) {
-                errores.duplicadoUsername = "Username Duplicado"
-            }
-        }
 
         if (!avatar || !validator.isURL(avatar)) {
             errores.avatar = "Error en la avatar"
@@ -52,7 +43,6 @@ export const registerUser = async (req, res) => {
         if (Object.keys(errores) <= 0) {
             const usuarioCreado = await UserModel.create({
                 nombre: nombre,
-                username: username,
                 email: email,
                 rol: tipo,
                 password: password,
@@ -116,16 +106,14 @@ export const logInUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        const {email, nombre, password, fechaNacimiento, avatar, telefono } = req.body;
+        const {email, nombre, password, telefono } = req.body;
+
+        console.log(req.body)
 
         const errores = {}
 
         if (!password || !validator.isStrongPassword(password)) {
             errores.password = "Error en la contraseña"
-        }
-
-        if (!fechaNacimiento || !validator.isDate(fechaNacimiento)) {
-            errores.fechaNacimiento = "Error en la fecha de Nacimiento"
         }
 
         if (!telefono || !validator.isMobilePhone(telefono, 'es-MX')) {
@@ -136,10 +124,6 @@ export const updateUser = async (req, res) => {
             errores.nombre = "Error en el Nombre"
         }
 
-        if (!avatar || !validator.isURL(avatar)) {
-            errores.avatar = "Error en la avatar"
-        }
-
         const usuarioEncontrado = await UserModel.findOne({where: {email: email}})
 
         if(!usuarioEncontrado) {
@@ -147,7 +131,7 @@ export const updateUser = async (req, res) => {
         }
 
         if(Object.keys(errores).length <= 0){
-            await UserModel.update({telefono: telefono, nombre: nombre, fechaNacimiento: fechaNacimiento, password: password, avatar: avatar},{where: {email: email}})
+            await UserModel.update({telefono: telefono, nombre: nombre, password: password},{where: {email: email}})
 
             const updatedUser = await UserModel.findOne({where: {email: email}})
 
@@ -166,6 +150,7 @@ export const updateUser = async (req, res) => {
 
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({success: false, msg: error, errores: []})
     }
 }

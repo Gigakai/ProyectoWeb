@@ -1,7 +1,13 @@
-import React, {useEffect, useRef} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 import "./HorizontalScrollBar.css"
+import DishAdminCard from "./DishAdminCard.jsx";
+import {CategoryContext} from "../Context/CategoryContext.jsx";
+import {ProductContext} from "../Context/ProductContext.jsx";
 
 function HorizontalScrollBar() {
+    const {categories} = useContext(CategoryContext);
+    const {menuUpdate} = useContext(ProductContext);
+
     const tabMenuRef = useRef(null);
     const leftBtnRef = useRef(null);
     const rightBtnRef = useRef(null);
@@ -16,6 +22,7 @@ function HorizontalScrollBar() {
     }
 
     useEffect(() => {
+
         iconVisibility();
         window.addEventListener("resize", iconVisibility);
         return () => window.removeEventListener("resize", iconVisibility);
@@ -35,10 +42,10 @@ function HorizontalScrollBar() {
         }
     }
 
-    const handleTabClick = (event) => {
+    const handleTabClick = (id, event) => {
         document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-
         event.target.classList.add("active");
+        menuUpdate(id);
     };
 
     return (
@@ -62,10 +69,9 @@ function HorizontalScrollBar() {
                     </svg>
                 </div>
                 <ul className="tab-menu" ref={tabMenuRef}>
-                    <li className="tab-btn active" onClick={handleTabClick}>Hamburguesas</li>
-                    <li className="tab-btn" onClick={handleTabClick}>Postres</li>
-                    <li className="tab-btn" onClick={handleTabClick}>Pizzas</li>
-                    <li className="tab-btn" onClick={handleTabClick}>Bebidas</li>
+                    {categories.map((categoria) => (
+                        <li key={categoria.id} className="tab-btn" onClick={(e) => handleTabClick(categoria.id, e)}>{categoria.nombre}</li>
+                    ))}
                 </ul>
             </div>
         </div>

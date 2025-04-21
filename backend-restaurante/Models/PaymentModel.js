@@ -23,7 +23,7 @@ PaymentModel.init({
         allowNull: false,
     },
     fechaVencimiento: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     idOwner:{
@@ -31,6 +31,14 @@ PaymentModel.init({
         allowNull: false,
         references:{
             model: "usuarios",
+            key: 'id',
+        }
+    },
+    idOrder:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references:{
+            model: "pedidos",
             key: 'id',
         }
     }

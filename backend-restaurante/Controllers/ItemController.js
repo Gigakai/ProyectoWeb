@@ -4,6 +4,9 @@ import validator from "validator";
 import {Op} from "sequelize";
 import '../associations.js'
 import CategoryModel from "../Models/CategoryModel.js";
+import ReviewModel from "../Models/ReviewModel.js";
+import dbConnection from "../database.js";
+import ItemOrderModel from "../Models/ItemOrderModel.js";
 
 export const addItem = async (req, res) => {
     try {
@@ -194,10 +197,30 @@ export const getItem = async (req, res) => {
 
 export const getItems = async (req, res) => {
     try {
-        const platillos = await ItemModel.findAll({where: {estatus: "A"}})
+        const platillos = await ItemModel.findAll({
+            where: { estatus: "A" },
+            include: [{
+                model: CategoryModel,
+                through: { attributes: [] },
+                attributes: ['id', 'nombre']
+            }]
+        });
+
+
+        const platillosConCalificacion = await Promise.all(platillos.map(async (platillo) => {
+            const totalComentarios = await ReviewModel.count({ where: { idPlatillo: platillo.id } });
+            const totalLikes = await ReviewModel.count({ where: { idPlatillo: platillo.id, calificacion: 'L' } });
+
+            const porcentajeLikes = totalComentarios === 0 ? 0 : (totalLikes / totalComentarios) * 100;
+
+            return {
+                ...platillo.toJSON(),
+                calificacion: porcentajeLikes.toFixed(2)  // Agrega la calificación como porcentaje
+            };
+        }));
 
         return res.status(200).json({
-            Platillos: platillos,
+            Platillos: platillosConCalificacion,
             msg: "Se obtuvieron los platillos",
             success: true
         })
@@ -206,55 +229,155 @@ export const getItems = async (req, res) => {
     }
 }
 
-export const filterItems = async (req, res) => {
+export const getItemsMenu = async (req, res) => {
     try {
-        const {idCategoria, availability, searchText, minPrice, maxPrice} = req.body;
+        const { idCategoria } = req.params;
 
-        if (!idCategoria || idCategoria.length <= 0) {
-            const platillos = await ItemModel.findAll({
-                where: {
-                    [Op.and]: [
-                        {precio: {[Op.gte]: minPrice}},
-                        {precio: {[Op.lte]: maxPrice}},
-                        {nombre: {[Op.like]: `%${searchText}%`}},
-                        {estatus: {[Op.eq]: availability}},
-                    ]
-                }
-            })
+        const platillos = await ItemModel.findAll({
+            where: { estatus: "A" },
+            include: [{
+                model: CategoryModel,
+                where: { id: idCategoria },
+                through: { attributes: [] },
+                attributes: ['id', 'nombre']
+            }]
+        });
 
-            return res.status(200).json({
-                Platillos: platillos,
-                msg: "Se obtuvieron los platillos",
-                success: true
-            })
+        const platillosConCalificacion = await Promise.all(platillos.map(async (platillo) => {
+            const totalComentarios = await ReviewModel.count({ where: { idPlatillo: platillo.id } });
+            const totalLikes = await ReviewModel.count({ where: { idPlatillo: platillo.id, calificacion: 'L' } });
 
-        } else {
-            const platillos = await ItemModel.findAll({
-                where: {
-                    [Op.and]: [
-                        {precio: {[Op.gte]: minPrice}},
-                        {precio: {[Op.lte]: maxPrice}},
-                        {nombre: {[Op.like]: `%${searchText}%`}},
-                        {estatus: {[Op.eq]: availability}},
-                    ]
-                },
-                include: {
-                    model: CategoryModel,
-                    where: {id: idCategoria},
-                    attributes: [],
-                    required: true
-                },
-            })
+            const porcentajeLikes = totalComentarios === 0 ? 0 : (totalLikes / totalComentarios) * 100;
 
-            return res.status(200).json({
-                Platillos: platillos,
-                msg: "Se obtuvieron los platillos",
-                success: true
-            })
+            return {
+                ...platillo.toJSON(),
+                calificacion: porcentajeLikes.toFixed(2)
+            };
+        }));
 
-        }
 
+        return res.status(200).json({
+            Platillos: platillosConCalificacion,
+            msg: "Se obtuvieron los platillos",
+            success: true
+        })
     } catch (error) {
+        console.log(error)
         res.status(500).json({success: false, msg: error, errores: []})
     }
 }
+
+export const getTopItems = async (req, res) => {
+    try {
+        // **Más vendidos**
+        const topVendidos = await ItemModel.findAll({
+            attributes: [
+                'id',
+                'nombre',
+                [dbConnection.fn('COUNT', dbConnection.col('PlatillosPedidos.idPlatillo')), 'cantidadVendida']
+            ],
+            include: [{
+                model: ItemOrderModel,
+                attributes: []
+            }],
+            group: ['id'],
+            order: [[dbConnection.sequelize.literal('cantidadVendida'), 'DESC']],
+            limit: 3
+        });
+
+        // **Más recientes**
+        const topRecientes = await ItemModel.findAll({
+            order: [['createdAt', 'DESC']],
+            limit: 3
+        });
+
+        // **Mejor valorados (porcentaje de "Likes")**
+        const topValorados = await ItemModel.findAll({
+            include: [{
+                model: ReviewModel,
+                attributes: [
+                    [dbConnection.fn('COUNT', dbConnection.col('ReviewModel.id')), 'totalComentarios'],
+                    [dbConnection.fn('SUM', dbConnection.literal("CASE WHEN calificacion = 'L' THEN 1 ELSE 0 END")), 'totalLikes']
+                ],
+                group: ['ReviewModel.idPlatillo'],
+            }],
+            order: [
+                [dbConnection.sequelize.literal('totalLikes / totalComentarios'), 'DESC']
+            ],
+            limit: 3
+        });
+
+
+        const topValoradosConCalificacion = await Promise.all(topValorados.map(async (platillo) => {
+            const totalComentarios = await ReviewModel.count({ where: { idPlatillo: platillo.id } });
+            const totalLikes = await ReviewModel.count({ where: { idPlatillo: platillo.id, calificacion: 'L' } });
+
+            const porcentajeLikes = totalComentarios === 0 ? 0 : (totalLikes / totalComentarios) * 100;
+
+            return {
+                ...platillo.toJSON(),
+                calificacion: porcentajeLikes.toFixed(2)
+            };
+        }));
+
+        return res.status(200).json({
+            topVendidos,
+            topRecientes,
+            topValorados: topValoradosConCalificacion,
+            msg: "Se obtuvieron los platillos destacados",
+            success: true
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, msg: error.message, errores: [] });
+    }
+};
+
+export const filterItems = async (req, res) => {
+    try {
+        const { idCategoria, availability, searchText, minPrice, maxPrice } = req.body;
+
+        const whereConditions = {
+            precio: { [Op.between]: [minPrice, maxPrice] },
+            nombre: { [Op.like]: `%${searchText}%` },
+            estatus: { [Op.eq]: availability }
+        };
+
+        const includeConditions = [{
+            model: CategoryModel,
+            through: { attributes: [] },
+            attributes: ['id', 'nombre']
+        }];
+
+        if (idCategoria && idCategoria.length > 0) {
+            includeConditions[0].where = { id: idCategoria };  // Filtrar por categoría
+        }
+
+        const platillos = await ItemModel.findAll({
+            where: whereConditions,
+            include: includeConditions
+        });
+
+        const platillosConCalificacion = await Promise.all(platillos.map(async (platillo) => {
+            const totalComentarios = await ReviewModel.count({ where: { idPlatillo: platillo.id } });
+            const totalLikes = await ReviewModel.count({ where: { idPlatillo: platillo.id, calificacion: 'L' } });
+
+            const porcentajeLikes = totalComentarios === 0 ? 0 : (totalLikes / totalComentarios) * 100;
+
+            return {
+                ...platillo.toJSON(),
+                calificacion: porcentajeLikes.toFixed(2)
+            };
+        }));
+
+        return res.status(200).json({
+            Platillos: platillosConCalificacion,
+            msg: "Se obtuvieron los platillos",
+            success: true
+        });
+
+    } catch (error) {
+        console.error("Error en filterItems:", error);
+        return res.status(500).json({ success: false, msg: "Error del servidor", errores: [] });
+    }
+};
+

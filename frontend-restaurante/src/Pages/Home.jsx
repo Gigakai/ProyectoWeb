@@ -15,6 +15,8 @@ const dishes = [
 ];
 
 function Home() {
+
+
     return (
         <main className="">
             {/* Sección Hero */}
@@ -57,24 +59,11 @@ function Home() {
                         Explora nuestro menú y descubre el platillo perfecto para ti.
                     </p>
                     <div className="flex justify-center space-x-5">
-                        <Button title="Ordenar Ahora" />
                         <Link to="/menu">
                             <Button title="Ver Menú" />
                         </Link>
                     </div>
                 </div>
-            </div>
-
-            <div>
-                <Dashboard details={"Nuevos Platillos"} dishes={dishes}/>
-            </div>
-
-            <div>
-                <Dashboard details={"Mas Vendidos"} dishes={dishes}/>
-            </div>
-
-            <div>
-                <Dashboard details={"Mejor Valorados"} dishes={dishes}/>
             </div>
 
         </main>

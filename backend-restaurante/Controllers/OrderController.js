@@ -2,6 +2,7 @@ import OrderModel from "../Models/OrderModel.js";
 import ItemOrderModel from "../Models/ItemOrderModel.js";
 import ItemModel from "../Models/ItemModel.js";
 import '../associations.js'
+import PaymentModel from "../Models/PaymentModel.js";
 
 export const addOrder = async (req, res) => {
     try {
@@ -33,7 +34,7 @@ export const addOrder = async (req, res) => {
             })
 
             for (const platillo of platillos) {
-                await ItemOrderModel.create({idPedido: orderCreado.id, idPlatillo: platillo.idPlatillo, cantidad: platillo.cantidad, precioUnitario: platillo.precio})
+                await ItemOrderModel.create({idPedido: orderCreado.id, idPlatillo: platillo.id, cantidad: platillo.cantidad, precioUnitario: platillo.precio})
             }
 
             return res.status(200).json({
@@ -89,25 +90,36 @@ export const getOrder = async (req, res) => {
 
 export const getOrdersByUser = async (req, res) => {
     try {
-        const {idUsuario} = req.params
+        const { idUsuario } = req.params;
 
-        const orders = await OrderModel.findAll({where: {idUsuario: idUsuario},  include: [{
-                model: ItemOrderModel,
-                include: [{
-                    model: ItemModel,
-                    attributes: ['nombre'],
-                }],
-                attributes: ['cantidad', 'precioUnitario'],
-            }],})
+        const orders = await OrderModel.findAll({
+            where: { idUsuario },
+            include: [
+                {
+                    model: ItemOrderModel,
+                    include: [
+                        {
+                            model: ItemModel,
+                            attributes: ['nombre'],
+                        }
+                    ],
+                    attributes: ['cantidad', 'precioUnitario'],
+                },
+                {
+                    model: PaymentModel,
+                    attributes: ['nombre', 'tipo', 'ultimosDigitos', 'fechaVencimiento'],
+                }
+            ],
+        });
 
         return res.status(200).json({
             Ordenes: orders,
             msg: "Se obtuvieron las Ordenes",
             success: true
-        })
+        });
 
-    }catch (error) {
-        res.status(500).json({success: false, msg: error, errores: []})
+    } catch (error) {
+        res.status(500).json({ success: false, msg: error.message, errores: [] });
     }
 }
 

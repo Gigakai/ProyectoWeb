@@ -7,4 +7,12 @@ export default defineConfig({
     react(),  // Mantiene el soporte para React
     tailwindcss(), // Agrega el soporte para Tailwind CSS
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        ws: true,
+      },
+    },
+  },
 });

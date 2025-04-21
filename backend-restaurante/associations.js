@@ -5,6 +5,7 @@ import ReviewModel from "./Models/ReviewModel.js";
 import UserModel from "./Models/UserModel.js";
 import OrderModel from "./Models/OrderModel.js";
 import ItemOrderModel from "./Models/ItemOrderModel.js";
+import PaymentModel from "./Models/PaymentModel.js";
 
 ItemModel.belongsToMany(CategoryModel, {
     through: ItemCategoryModel,
@@ -32,4 +33,7 @@ ItemOrderModel.belongsTo(OrderModel, { foreignKey: "idPedido" });
 ItemModel.hasMany(ItemOrderModel, { foreignKey: "idPlatillo" });
 ItemOrderModel.belongsTo(ItemModel, { foreignKey: "idPlatillo" });
 
-export default { ItemModel, CategoryModel, ItemCategoryModel, OrderModel, ItemOrderModel };
+OrderModel.hasOne(PaymentModel, { foreignKey: 'idOrder' });
+PaymentModel.belongsTo(OrderModel, { foreignKey: 'idOrder' });
+
+export default { ItemModel, CategoryModel, ItemCategoryModel, OrderModel, ItemOrderModel, PaymentModel };

@@ -1,23 +1,30 @@
-import React from "react";
+import React, {useContext} from "react";
+import { FaTrashAlt } from "react-icons/fa";
+import {TransContext} from "../Context/TransContext.jsx";
 
+function ItemProduct(props) {
+    const {removeItem} = useContext(TransContext)
 
-function ItemProduct() {
+    const handleTrashClick = () => {
+        removeItem(props.id)
+    };
+
     return (
         <>
             <div className="flex flex-row w-full items-center justify-start">
                 <div className="p-2">
-                    <img className="w-12 h-12 rounded-[50%] object-cover" src="https://res.cloudinary.com/amecar/image/upload/f_auto,w_849/v1591307573/ALAPARRILLA-DoubleWesternBaconCheeseburger-min_l4q26i.jpg" alt=""/>
+                    <img className="w-12 h-12 rounded-[50%] object-cover" src={props.imagen} alt=""/>
                 </div>
                 <div className="flex flex-row justify-between w-[85%]">
                     <div className="flex flex-col items-start w-[80%] px-1">
-                        <p className="text-lg text-black font-medium text-start">Western Bacon</p>
-                        <span className="text-base text-black">Hamburguesa con triple salsa</span>
+                        <p className="text-lg text-black font-medium text-start">{props.nombre}</p>
+                        <span className="text-base text-black">Cantidad: {props.cantidad}</span>
                     </div>
                     <div className="flex flex-col items-end w-[20%] px-1">
-                        <p className="text-lg text-black font-medium">$120.00</p>
+                        <p className="text-lg text-black font-medium">${props.precio}</p>
                         <div className="flex flex-row items-center justify-center gap-1">
 
-                            <span className="text-base text-black">Cantidad: 1</span>
+                            <button onClick={handleTrashClick} className="cursor-pointer text-base text-[#f25e53] hover:text-[#f25e53b3] active:text-[#f25e53] p-1"><FaTrashAlt /></button>
                         </div>
 
                     </div>

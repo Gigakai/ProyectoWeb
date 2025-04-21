@@ -1,15 +1,31 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {BiUserCircle, BiEdit} from "react-icons/bi";
+import {AuthContext} from "../Context/AuthContext.jsx";
+import {TransContext} from "../Context/TransContext.jsx";
+import OrderCard from "../Components/OrderCard.jsx";
 
 function Profile() {
-    const [editing, setEditing] = useState(false);
-    const [userData, setUserData] = useState({
-        nombre: "Gustavo Gomez",
-        telefono: "+52 768 110 6299",
-        email: "Gus.Gomez@gmail.com",
-        password: "********",
-        avatar: ".././assets/comida3.jpg"
-    });
+    const {
+        activeUser,
+        formUpdateData,
+        updateFormUpdate,
+        updateUserFun,
+        errorsUpdateUser,
+        updateProgress,
+        setFormUpdateData
+    } = useContext(AuthContext);
+
+    const {orders} = useContext(TransContext);
+
+    useEffect(() => {
+        setFormUpdateData({
+            nombre: activeUser?.nombre || '',
+            telefono: activeUser?.telefono || '',
+            password: activeUser?.password || ''
+        });
+
+
+    }, []);
 
     const [pedidos] = useState([
         {
@@ -33,39 +49,32 @@ function Profile() {
         }
     ]);
 
-    const handleInputChange = (e) => {
-        setUserData({
-            ...userData,
-            [e.target.name]: e.target.value
-        });
-    };
-
 
     return (
         <div className="text-black min-h-screen p-8 max-w-7xl mx-auto pt-28">
-            <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <form onSubmit={updateUserFun} className="bg-white p-6 rounded-lg shadow-lg mb-8">
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-4">
                         <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
-                            {userData.avatar ? (
+                            {activeUser?.avatar ? (
                                 <img
-                                    src={userData.avatar}
+                                    src={activeUser?.avatar}
                                     alt="Avatar"
-                                    className="w-[20em] h-[20em] rounded-full object-cover"
+                                    className="w-[5em] h-[5em] rounded-full object-cover"
                                 />
                             ) : (
                                 <BiUserCircle className="text-5xl text-gray-400"/>
                             )}
                         </div>
                         <h1 className="text-3xl font-bold text-gray-900">
-                            {userData.nombre}
+                            {activeUser?.nombre}
                         </h1>
                     </div>
                     <button
-                        onClick={() => setEditing(!editing)}
-                        className="bg-[#f25e53] hover:bg-[#f25e53b3] active:bg-[#f25e53] text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2"
+                        disabled={updateProgress}
+                        className="bg-[#f25e53] cursor-pointer hover:bg-[#f25e53b3] active:bg-[#f25e53] text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2"
                     >
-                        <BiEdit className="text-xl"/> {editing ? "Guardar Cambios" : "Editar Perfil"}
+                        <BiEdit className="text-xl"/> Editar Perfil
                     </button>
                 </div>
 
@@ -77,11 +86,16 @@ function Profile() {
                         <input
                             type="text"
                             name="nombre"
-                            value={userData.nombre}
-                            onChange={handleInputChange}
-                            className={`w-full p-3 border rounded-lg ${!editing && "bg-gray-100"}`}
-                            disabled={!editing}
+                            value={formUpdateData.nombre}
+                            onChange={e => updateFormUpdate({...formUpdateData, nombre: e.target.value})}
+                            className={`w-full p-3 border rounded-lg`}
                         />
+                        <div className="w-full flex items-center color-red-600">
+                            {errorsUpdateUser?.nombre &&
+                                <p className={`text-red-500 text-sm mt-1 transition-opacity duration-300 ease-in ${errorsUpdateUser?.nombre ? 'opacity-100' : 'opacity-0'}`}>Nombre
+                                    Invalido</p>
+                            }
+                        </div>
                     </div>
 
                     <div>
@@ -91,11 +105,16 @@ function Profile() {
                         <input
                             type="tel"
                             name="telefono"
-                            value={userData.telefono}
-                            onChange={handleInputChange}
-                            className={`w-full p-3 border rounded-lg ${!editing && "bg-gray-100"}`}
-                            disabled={!editing}
+                            value={formUpdateData.telefono}
+                            onChange={e => updateFormUpdate({...formUpdateData, telefono: e.target.value})}
+                            className={`w-full p-3 border rounded-lg`}
                         />
+                        <div className="w-full flex items-center color-red-600">
+                            {errorsUpdateUser?.telefono &&
+                                <p className={`text-red-500 text-sm mt-1 transition-opacity duration-300 ease-in ${errorsUpdateUser?.telefono ? 'opacity-100' : 'opacity-0'}`}>Telefono
+                                    Invalido</p>
+                            }
+                        </div>
                     </div>
 
                     <div>
@@ -103,12 +122,11 @@ function Profile() {
                             Correo Electrónico
                         </label>
                         <input
-                            type="email"
+                            type="text"
                             name="email"
-                            value={userData.email}
-                            onChange={handleInputChange}
-                            className={`w-full p-3 border rounded-lg ${!editing && "bg-gray-100"}`}
-                            disabled={!editing}
+                            value={activeUser?.email}
+                            className={`w-full p-3 border rounded-lg bg-gray-100`}
+                            disabled={true}
                         />
                     </div>
 
@@ -119,52 +137,34 @@ function Profile() {
                         <input
                             type="password"
                             name="password"
-                            value={userData.password}
-                            onChange={handleInputChange}
-                            className={`w-full p-3 border rounded-lg ${!editing && "bg-gray-100"}`}
-                            disabled={!editing}
+                            value={formUpdateData.password}
+                            onChange={e => updateFormUpdate({...formUpdateData, password: e.target.value})}
+                            className={`w-full p-3 border rounded-lg`}
                         />
+                        <div className="w-full flex items-center color-red-600">
+                            {errorsUpdateUser?.password &&
+                                <p className={`text-red-500 text-sm mt-1 transition-opacity duration-300 ease-in ${errorsUpdateUser?.password ? 'opacity-100' : 'opacity-0'}`}>Contraseña
+                                    Invalida</p>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
 
             {/* HISTORIAL PEDIDOS */}
             <div className="bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Historial de Pedidos</h2>
 
                 <div className="space-y-6">
-                    {pedidos.map((pedido) => (
-                        <div key={pedido.id} className="border rounded-lg p-6 shadow-sm">
-                            <div className="space-y-4">
-                                {pedido.items.map((item, index) => (
-                                    <div key={index} className="flex justify-between items-center border-b pb-2">
-                                        <div>
-                                            <p className="font-semibold">{item.nombre}</p>
-                                            <p className="text-sm text-gray-500">
-                                                Cantidad: {item.cantidad}
-                                            </p>
-                                        </div>
-                                        <p className="text-gray-600">
-                                            $ {(item.precio * item.cantidad).toFixed(2)}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <p className="text-gray-600 font-semibold">
-                                        Fecha: {pedido.fecha}
-                                    </p>
-                                    <p className="text-gray-600 font-bold">
-                                        Estado: <span className="text-[#f25e53] font-semibold">{pedido.estado}</span>
-                                    </p>
-                                </div>
-                                <p className="text-xl font-bold text-[#f25e53]">
-                                    Total: $ {pedido.total.toFixed(2)}
-                                </p>
-                            </div>
-                        </div>
+                    {orders?.map((order) => (
+                        <OrderCard
+                            id={order.id}
+                            metodo={order.Metodo}
+                            key={order.id}
+                            Platillos={order.PlatillosPedidos}
+                            direccion={order.direccion}
+                            createdAt={order.createdAt}
+                        />
                     ))}
                 </div>
             </div>

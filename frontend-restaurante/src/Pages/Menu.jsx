@@ -1,46 +1,33 @@
-import React from "react";
+import React, {useContext} from "react";
 import DishCard from "../Components/DishCard.jsx";
-import menu from "../assets/menu.jpg";
-import menu1 from "../assets/menu1.jpg";
-import menu2 from "../assets/menu2.jpg";
 import HorizontalScrollBar from "../Components/HorizontalScrollBar.jsx";
-import c1 from "../assets/c1.jpg";
-import c2 from "../assets/c2.jpg";
-import c3 from "../assets/c3.jpg";
-import c4 from "../assets/c4.jpg";
-import c5 from "../assets/c5.jpg";
-import c6 from "../assets/c6.jpg";
-
-const dishes = [
-    { id: 1, img: c1, title: "Tasty Dish", price: "$10.99", description: "Descripción del platillo 1" },
-    { id: 2, img: c2, title: "Tasty Dish", price: "$12.99", description: "Descripción del platillo 2" },
-    { id: 3, img: c3, title: "Tasty Dish", price: "$19.99", description: "Descripción del platillo 3" },
-    { id: 4, img: c4, title: "Tasty Dish", price: "$11.99", description: "Descripción del platillo 4" },
-    { id: 5, img: c5, title: "Tasty Dish", price: "$10.99", description: "Descripción del platillo 5" },
-    { id: 6, img: c6, title: "Tasty Dish", price: "$12.99", description: "Descripción del platillo 6" },
-];
+import {ProductContext} from "../Context/ProductContext.jsx";
 
 const Menu=() =>{
-  return(
+    const {productsMenu} = useContext(ProductContext)
+
+    return(
       <div className=" min-h-screen flex flex-col justify-center items-center lg:px-32 px-5 gap-6">
           <h1 className=" text-4xl font-semibold text-center pt-28 mt-4">Menu</h1>
           <section className="relative m-[0 80px] w-full">
               <HorizontalScrollBar/>
           </section>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {dishes.map((dish) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {productsMenu?.map((platillo) => (
                   <DishCard
-                      key={dish.id}
-                      id={dish.id}
-                      img={dish.img}
-                      title={dish.title}
-                      price={dish.price}
-                      description={dish.description}
+                      key={platillo.id}
+                      id={platillo.id}
+                      imagen={platillo.imagen}
+                      nombre={platillo.nombre}
+                      precio={platillo.precio}
+                      descripcion={platillo.descripcion}
+                      Categoria={platillo.Categoria}
+                      calificacion={platillo.calificacion}
                   />
               ))}
           </div>
       </div>
-  )
+    )
 }
 
 export default Menu

@@ -1,9 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import { MdNumbers } from "react-icons/md";
 import { MdNotListedLocation } from "react-icons/md";
+import {TransContext} from "../Context/TransContext.jsx";
 
 
 function AddressFormModal({isOpenAddress, closeFun}) {
+    const {updateFormRegisterAddress, registerAddress, formRegisterAddress, errorsRegisterAddress} = useContext(TransContext)
+
     return (
         <div
             className={`top-0 left-0  w-full h-full bg-opacity-25 backdrop-blur-sm fixed justify-center items-center flex px-2 py-14 ${isOpenAddress ? "hidden" : ""}`}>
@@ -20,79 +23,127 @@ function AddressFormModal({isOpenAddress, closeFun}) {
                     </button>
 
                 </div>
-                <form
+                <form onSubmit={(e) => registerAddress(e, closeFun)}
                     className="flex items-center justify-center h-full flex-col lg:px-16 md:px-10 py-5 gap-6">
                     <h2 className="text-[#f25e53] font-semibold text-2xl w-full text-center">Ingresar tu Dirección</h2>
                     <div className="flex w-[100%] flex-col lg:flex-row gap-6">
-                        <div
-                            className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
-                            <MdNotListedLocation className="text-gray-500 mr-3 text-lg"/>
-                            <input
-                                type="text"
-                                placeholder="Calle"
-                                className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
-                                required
-                            />
+                        <div className="w-full flex flex-col">
+                            <div
+                                className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
+                                <MdNotListedLocation className="text-gray-500 mr-3 text-lg"/>
+                                <input
+                                    type="text"
+                                    placeholder="Calle"
+                                    className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
+                                    value={formRegisterAddress.calle}
+                                    onChange={e => updateFormRegisterAddress({
+                                        ...formRegisterAddress,
+                                        calle: e.target.value
+                                    })}
+                                />
+                            </div>
+                            <div className="w-full flex items-center color-red-600">
+                                {errorsRegisterAddress?.calle &&
+                                    <p className={`text-red-500 text-sm mt-1 transition-opacity duration-300 ease-in ${errorsRegisterAddress?.calle ? 'opacity-100' : 'opacity-0'}`}>Calle
+                                        Invalida</p>
+                                }
+                            </div>
+                        </div>
+                        <div className="w-full flex flex-col">
+                            <div
+                                className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
+                                <MdNumbers className="text-gray-500 mr-3 text-lg"/>
+                                <input
+                                    type="text"
+                                    placeholder="No. Casa"
+                                    className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
+                                    value={formRegisterAddress.noCasa}
+                                    onChange={e => updateFormRegisterAddress({
+                                        ...formRegisterAddress,
+                                        noCasa: e.target.value
+                                    })}
+                                />
+                            </div>
+                            <div className="w-full flex items-center color-red-600">
+                                {errorsRegisterAddress?.noCasa &&
+                                    <p className={`text-red-500 text-sm mt-1 transition-opacity duration-300 ease-in ${errorsRegisterAddress?.noCasa ? 'opacity-100' : 'opacity-0'}`}>No. Casa
+                                        Invalido</p>
+                                }
+                            </div>
                         </div>
 
-                        <div
-                            className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
-                            <MdNumbers className="text-gray-500 mr-3 text-lg"/>
-                            <input
-                                type="text"
-                                placeholder="No. Casa"
-                                className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
-                                required
-                            />
+
+                    </div>
+                    <div className="flex w-[100%] flex-col lg:flex-row gap-6">
+                        <div className="w-full flex flex-col">
+                            <div
+                                className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
+                                <MdNotListedLocation className="text-gray-500 mr-3 text-lg"/>
+                                <input
+                                    type="text"
+                                    placeholder="Colonia"
+                                    className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
+                                    value={formRegisterAddress.colonia}
+                                    onChange={e => updateFormRegisterAddress({
+                                        ...formRegisterAddress,
+                                        colonia: e.target.value
+                                    })}
+                                />
+                            </div>
+                            <div className="w-full flex items-center color-red-600">
+                                {errorsRegisterAddress?.colonia &&
+                                    <p className={`text-red-500 text-sm mt-1 transition-opacity duration-300 ease-in ${errorsRegisterAddress?.colonia ? 'opacity-100' : 'opacity-0'}`}>Municipio
+                                        Invalido</p>
+                                }
+                            </div>
+                        </div>
+                        <div className="w-full flex flex-col">
+                            <div
+                                className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
+                                <MdNotListedLocation className="text-gray-500 mr-3 text-lg"/>
+                                <input
+                                    type="text"
+                                    placeholder="Municipio"
+                                    className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
+                                    value={formRegisterAddress.municipio}
+                                    onChange={e => updateFormRegisterAddress({
+                                        ...formRegisterAddress,
+                                        municipio: e.target.value
+                                    })}
+                                />
+                            </div>
+                            <div className="w-full flex items-center color-red-600">
+                                {errorsRegisterAddress?.municipio &&
+                                    <p className={`text-red-500 text-sm mt-1 transition-opacity duration-300 ease-in ${errorsRegisterAddress?.municipio ? 'opacity-100' : 'opacity-0'}`}>Municipio
+                                        Invalido</p>
+                                }
+                            </div>
                         </div>
                     </div>
                     <div className="flex w-[100%] flex-col lg:flex-row gap-6">
-                        <div
-                            className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
-                            <MdNotListedLocation className="text-gray-500 mr-3 text-lg"/>
-                            <input
-                                type="text"
-                                placeholder="Colonia"
-                                className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
-                                required
-                            />
+                        <div className="w-full flex flex-col">
+                            <div
+                                className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
+                                <MdNotListedLocation className="text-gray-500 mr-3 text-lg"/>
+                                <input
+                                    type="text"
+                                    placeholder="Estado"
+                                    className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
+                                    value={formRegisterAddress.estado}
+                                    onChange={e => updateFormRegisterAddress({
+                                        ...formRegisterAddress,
+                                        estado: e.target.value
+                                    })}
+                                />
+                            </div>
+                            <div className="w-full flex items-center color-red-600">
+                                {errorsRegisterAddress?.estado &&
+                                    <p className={`text-red-500 text-sm mt-1 transition-opacity duration-300 ease-in ${errorsRegisterAddress?.estado ? 'opacity-100' : 'opacity-0'}`}>Estado Invalido</p>
+                                }
+                            </div>
                         </div>
 
-                        <div
-                            className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
-                            <MdNumbers className="text-gray-500 mr-3 text-lg"/>
-                            <input
-                                type="text"
-                                placeholder="Codigo Postal"
-                                className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
-                                required
-                            />
-                        </div>
                     </div>
-                    <div className="flex w-[100%] flex-col lg:flex-row gap-6">
-                        <div
-                            className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
-                            <MdNotListedLocation className="text-gray-500 mr-3 text-lg"/>
-                            <input
-                                type="text"
-                                placeholder="Nombre"
-                                className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
-                                required
-                            />
-                        </div>
-
-                        <div
-                            className="w-full flex items-center border-b-2 border-gray-300 py-2 focus-within:border-black">
-                            <MdNotListedLocation className="text-gray-500 mr-3 text-lg"/>
-                            <input
-                                type="text"
-                                placeholder="Estado"
-                                className="w-full text-black bg-transparent focus:outline-none placeholder-gray-400"
-                                required
-                            />
-                        </div>
-                    </div>
-
                     <button
                         className="text-white bg-[#f25e53] cursor-pointer px-6 py-2 rounded-md font-medium tracking-wider transition hover:bg-[#f25e53b3] active:bg-[#f25e53] overflow-hidden overflow-ellipsis whitespace-nowrap text-base w-full">Ingresar
                     </button>

@@ -1,12 +1,36 @@
 import React, {useContext} from "react";
 import ItemProduct from "./ItemProduct.jsx";
 import {TransContext} from "../Context/TransContext.jsx";
+import DishCard from "./DishCard.jsx";
+import {useNavigate} from "react-router-dom";
+import {Bounce, toast} from "react-toastify";
 
 
 function SideCart() {
-    const {isCartActive, setIsCartActive} = useContext(TransContext)
+    const navigate = useNavigate();
+
+    const {isCartActive, setIsCartActive, cartItems} = useContext(TransContext)
 
     const closeCart = () => {setIsCartActive(false);}
+
+    const handleBtnClick = () => {
+        if(cartItems.length > 0){
+            closeCart()
+            navigate(`/pay`);
+        }else{
+            toast.info('No Tienes Productos en el carrito', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        }
+    };
 
     return (
         <div className={`flex w-full h-full pr-3 bg-opacity-25 backdrop-blur-sm fixed top-0 left-0 z-52 ${ isCartActive ? "":"hidden"}`}>
@@ -25,9 +49,16 @@ function SideCart() {
                 </div>
                 <hr className="text-[#f25e53] my-2 bg-[#70a649]"/>
                 <div className="h-[79%] flex flex-col overflow-y-auto items-start justify-start w-full">
-                    <ItemProduct/>
-                    <ItemProduct/>
-                    <ItemProduct/>
+                    {cartItems?.map((item) => (
+                        <ItemProduct
+                            key={item.id}
+                            id={item.id}
+                            imagen={item.imagen}
+                            nombre={item.nombre}
+                            cantidad={item.cantidad}
+                            precio={item.precio}
+                        />
+                    ))}
                 </div>
                 <hr className="text-[#f25e53] my-2 bg-[#70a649]"/>
                 <div className="flex flex-row justify-between text-lg w-full">
@@ -35,7 +66,7 @@ function SideCart() {
                     <p>$</p>
                 </div>
                 <div className="px-5">
-                    <button
+                    <button onClick={handleBtnClick}
                         className="text-[#F2F2F2] bg-[#f25e53] px-6 py-2 rounded-md font-medium tracking-wider transition hover:bg-[#f25e53b3] active:bg-[#f25e53] overflow-hidden overflow-ellipsis whitespace-nowrap text-base w-full cursor-pointer">Continuar
                     </button>
                 </div>
